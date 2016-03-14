@@ -27,8 +27,10 @@
 
 + (CardIOIplImage *)rgbImageWithY:(CardIOIplImage *)y cb:(CardIOIplImage *)cb cr:(CardIOIplImage *)cr;
 
+
 - (UIImage *)UIImage;
 
+- (UIImage *)ico_ocr_image_threshold:(int)threshold;
 @property(nonatomic, assign, readonly) IplImage *image;
 @property(nonatomic, assign, readonly) CvSize cvSize;
 @property(nonatomic, assign, readonly) CGSize cgSize;

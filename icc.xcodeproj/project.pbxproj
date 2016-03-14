@@ -124,6 +124,10 @@
 		4358E6FA1BFBBCCC007E07C3 /* CardIOCardholderNameTextFieldDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4358E6F61BFBB35E007E07C3 /* CardIOCardholderNameTextFieldDelegate.h */; };
 		438FDD141BFD1BF3007DC6CB /* CardIOCardholderNameTextFieldDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4358E6F71BFBB35E007E07C3 /* CardIOCardholderNameTextFieldDelegate.m */; };
 		55CD7FA818EF777F00BB381A /* iccChoicesSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CD7FA718EF777F00BB381A /* iccChoicesSelectViewController.m */; };
+		817F0D211C96B22E00DE595D /* CardIOIdCardViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 817F0D1F1C96B22E00DE595D /* CardIOIdCardViewController.h */; settings = {ASSET_TAGS = (); }; };
+		817F0D221C96B22E00DE595D /* CardIOIdCardViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 817F0D1F1C96B22E00DE595D /* CardIOIdCardViewController.h */; settings = {ASSET_TAGS = (); }; };
+		817F0D231C96B22E00DE595D /* CardIOIdCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 817F0D201C96B22E00DE595D /* CardIOIdCardViewController.m */; settings = {ASSET_TAGS = (); }; };
+		817F0D241C96B22E00DE595D /* CardIOIdCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 817F0D201C96B22E00DE595D /* CardIOIdCardViewController.m */; settings = {ASSET_TAGS = (); }; };
 		92122C301B8C3865004D705E /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92122C2F1B8C3865004D705E /* OpenGLES.framework */; };
 		92122C361B8C38E9004D705E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92263E311B84283D003FE678 /* UIKit.framework */; };
 		92122C391B8C393D004D705E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E9618E119C8EBC50023CDBB /* CoreMedia.framework */; };
@@ -769,6 +773,8 @@
 		55CD7FA618EF777F00BB381A /* iccChoicesSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iccChoicesSelectViewController.h; path = Classes/iccChoicesSelectViewController.h; sourceTree = "<group>"; };
 		55CD7FA718EF777F00BB381A /* iccChoicesSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iccChoicesSelectViewController.m; path = Classes/iccChoicesSelectViewController.m; sourceTree = "<group>"; };
 		55DAEBCD17C8258B0041A4E6 /* RootViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "RootViewController~ipad.xib"; path = "Classes/RootViewController~ipad.xib"; sourceTree = "<group>"; };
+		817F0D1F1C96B22E00DE595D /* CardIOIdCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOIdCardViewController.h; sourceTree = "<group>"; };
+		817F0D201C96B22E00DE595D /* CardIOIdCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardIOIdCardViewController.m; sourceTree = "<group>"; };
 		844D4D5914469AB20070FCB3 /* CardIOStyles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CardIOStyles.h; path = Classes/CardIOStyles.h; sourceTree = "<group>"; };
 		8487783015A39BCB00B08B41 /* CardIOAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CardIOAnalytics.h; path = Classes/CardIOAnalytics.h; sourceTree = "<group>"; };
 		8487783115A39BCB00B08B41 /* CardIOAnalytics.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; name = CardIOAnalytics.mm; path = Classes/CardIOAnalytics.mm; sourceTree = "<group>"; };
@@ -974,8 +980,9 @@
 			children = (
 				03B21724134648EE00958550 /* CardIODataEntryViewController.h */,
 				03B21725134648EE00958550 /* CardIODataEntryViewController.m */,
-				03EE575014EEBCB500CE3715 /* CardIOPaymentViewControllerContinuation.h */,
+				817F0D201C96B22E00DE595D /* CardIOIdCardViewController.m */,
 				0307CFF213304B210019C8F7 /* CardIOPaymentViewController.m */,
+				03EE575014EEBCB500CE3715 /* CardIOPaymentViewControllerContinuation.h */,
 				03B2E7071200EFBC00B14549 /* CardIOViewController.h */,
 				03B2E7081200EFBC00B14549 /* CardIOViewController.mm */,
 			);
@@ -1025,6 +1032,7 @@
 				D1824381144CF73400829B91 /* CardIO.h */,
 				D1824386144CF73400829B91 /* CardIOCreditCardInfo.h */,
 				3E587F8A18C7E165000C1D3A /* CardIODetectionMode.h */,
+				817F0D1F1C96B22E00DE595D /* CardIOIdCardViewController.h */,
 				3E583C2117BB03C900CB326A /* CardIOView.h */,
 				3E4D865A17BC50AB0057505D /* CardIOViewDelegate.h */,
 				D1824387144CF73400829B91 /* CardIOPaymentViewController.h */,
@@ -1999,6 +2007,7 @@
 				92263DEE1B83AE04003FE678 /* CardIODevice.h in Headers */,
 				3E9F4C35181F03F300F33B48 /* mz_ios.h in Headers */,
 				3E9F4C38181F03F300F33B48 /* CardIOBundle.h in Headers */,
+				817F0D221C96B22E00DE595D /* CardIOIdCardViewController.h in Headers */,
 				3E9F4C39181F03F300F33B48 /* CardIOContext.h in Headers */,
 				3E9F4C3A181F03F300F33B48 /* CardIOAnimation.h in Headers */,
 				3E0133E1198AD433009E579A /* CardIO-Prefix.pch in Headers */,
@@ -2027,6 +2036,7 @@
 				92263DEC1B83AE03003FE678 /* CardIOResource.h in Headers */,
 				92263E201B83B6C1003FE678 /* canny.h in Headers */,
 				92263E291B83B903003FE678 /* CardIONumbersTextFieldDelegate.h in Headers */,
+				817F0D211C96B22E00DE595D /* CardIOIdCardViewController.h in Headers */,
 				92263E231B83B6C1003FE678 /* hough.h in Headers */,
 				92263E241B83B6E0003FE678 /* sobel.h in Headers */,
 				92263E251B83B6E3003FE678 /* stats.h in Headers */,
@@ -2377,6 +2387,7 @@
 				3E9F4BE9181F03F300F33B48 /* CardIOCardOverlay.m in Sources */,
 				3E9F4BEA181F03F300F33B48 /* CardIOCreditCardNumber.mm in Sources */,
 				3E9F4BEB181F03F300F33B48 /* CardIOCVVTextFieldDelegate.m in Sources */,
+				817F0D241C96B22E00DE595D /* CardIOIdCardViewController.m in Sources */,
 				3E9F4BEC181F03F300F33B48 /* CardIONumbersTextFieldDelegate.m in Sources */,
 				3E9F4BED181F03F300F33B48 /* CardIOSectionBasedTableViewDelegate.m in Sources */,
 				3E9F4BEE181F03F300F33B48 /* CardIORowBasedTableViewSection.m in Sources */,
@@ -2441,6 +2452,7 @@
 				92263DFA1B83AE19003FE678 /* CardIOCardOverlay.m in Sources */,
 				92263DDA1B83ADA3003FE678 /* CardIOCreditCardNumber.mm in Sources */,
 				92263E151B83AF13003FE678 /* CardIOCVVTextFieldDelegate.m in Sources */,
+				817F0D231C96B22E00DE595D /* CardIOIdCardViewController.m in Sources */,
 				92263E191B83AF13003FE678 /* CardIONumbersTextFieldDelegate.m in Sources */,
 				92263E281B83B897003FE678 /* CardIOSectionBasedTableViewDelegate.m in Sources */,
 				92263E271B83B897003FE678 /* CardIORowBasedTableViewSection.m in Sources */,
