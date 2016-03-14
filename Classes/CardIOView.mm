@@ -45,6 +45,7 @@ NSString * const CardIOScanningOrientationAnimationDuration = @"CardIOScanningOr
 // These two properties were declared readonly in CardIOViewContinuation.h
 @property(nonatomic, strong, readwrite) CardIOCardScanner *scanner;
 @property(nonatomic, strong, readwrite) CardIOTransitionView *transitionView;
+@property(nonatomic, assign, readwrite) id<CardIOIdCardScannerDelegate> idScanner;
 
 @property(nonatomic, assign, readwrite) BOOL scanHasBeenStarted;
 
@@ -181,6 +182,9 @@ NSString * const CardIOScanningOrientationAnimationDuration = @"CardIOScanningOr
   return self.cameraView.scanner;
 }
 
+- (id<CardIOIdCardScannerDelegate>)idScanner {
+  return self.cameraView.idScanner;
+}
 #pragma mark - Video session start/stop
 
 - (void)startSession {

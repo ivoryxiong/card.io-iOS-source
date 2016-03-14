@@ -9,6 +9,7 @@
 #import "CardIOBundle.h"
 #import "CardIOCameraView.h"
 #import "CardIOCardScanner.h"
+#import "CardIOIdCardScannerDelegate.h"
 #import "CardIOCGGeometry.h"
 #import "CardIOConfig.h"
 #import "CardIOMacros.h"
@@ -192,6 +193,10 @@
 
 - (CardIOCardScanner *)scanner {
   return self.videoStream.scanner;
+}
+
+- (id<CardIOIdCardScannerDelegate>)idScanner {
+  return self.videoStream.idScanner;
 }
 
 - (void)setSuppressFauxCardLayer:(BOOL)suppressFauxCardLayer {

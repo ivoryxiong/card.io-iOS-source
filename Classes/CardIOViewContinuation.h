@@ -7,10 +7,12 @@
 
 @class CardIOCardScanner;
 @class CardIOTransitionView;
+@protocol CardIOIdCardScannerDelegate;
 
 @interface CardIOView (continued)
 
 @property(nonatomic, strong, readonly) CardIOCardScanner *scanner;
+@property(nonatomic, assign) id<CardIOIdCardScannerDelegate> idScanner;
 @property(nonatomic, strong, readonly) CardIOTransitionView *transitionView;
 
 @end

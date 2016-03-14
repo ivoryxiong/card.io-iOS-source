@@ -15,6 +15,7 @@
 @class CardIOVideoFrame;
 @class CardIOVideoStream;
 @class CardIOCardScanner;
+@protocol CardIOIdCardScannerDelegate;
 
 @interface CardIOCameraView : UIView<CardIOVideoStreamDelegate, CardIOGuideLayerDelegate>
 
@@ -33,6 +34,7 @@
 // CGRect for the actual camera preview area within the cameraView
 - (CGRect)cameraPreviewFrame;
 
+@property(nonatomic, assign) id<CardIOIdCardScannerDelegate> idScanner;
 @property(nonatomic, strong, readonly)  CardIOCardScanner *scanner;
 @property(nonatomic, weak, readwrite)   id<CardIOVideoStreamDelegate> delegate;
 @property(nonatomic, strong, readwrite) UIFont *instructionsFont;

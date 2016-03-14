@@ -6,6 +6,7 @@
 #import <Foundation/Foundation.h>
 #import "CardIOAnalytics.h"
 #import "CardIODetectionMode.h"
+#import "CardIOIdCardScannerDelegate.h"
 
 @interface CardIOConfig : NSObject
 @property(nonatomic, strong, readwrite) CardIOAnalytics *scanReport;
@@ -21,4 +22,6 @@
 @property(nonatomic, retain, readwrite) UIView *scanOverlayView;
 
 @property(nonatomic, assign, readwrite) CardIODetectionMode detectionMode;
+@property(nonatomic, assign, readwrite) id<CardIOIdCardScannerDelegate> idScanner;
+
 @end

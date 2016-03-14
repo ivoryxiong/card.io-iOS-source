@@ -10,7 +10,8 @@
 typedef NS_ENUM(NSInteger, CardIODetectionMode) {
   CardIODetectionModeCardImageAndNumber = 0,
   CardIODetectionModeCardImageOnly,
-  CardIODetectionModeAutomatic
+  CardIODetectionModeAutomatic,
+  CardIODetectionModeCardImageAndIdCard,
 };
 
 #endif

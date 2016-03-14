@@ -10,6 +10,7 @@
 #import "CardIOVideoFrame.h"
 #import "CardIOMacros.h"
 #import "CardIOCardScanner.h"
+#import "CardIOIdCardScannerDelegate.h"
 #import "CardIOConfig.h"
 #import "CardIOOrientation.h"
 #import "CardIOPaymentViewControllerContinuation.h"
@@ -179,6 +180,7 @@
   if((self = [super init])) {
     _interfaceOrientation = (UIInterfaceOrientation)UIDeviceOrientationUnknown;
     _scanner = [[CardIOCardScanner alloc] init];
+    _idScanner = self.config.idScanner;
     _cameraConfigurationSemaphore = dispatch_semaphore_create(1); // parameter of `1` implies "allow access to only one thread at a time"
 #if USE_CAMERA
     _captureSession = [[AVCaptureSession alloc] init];
