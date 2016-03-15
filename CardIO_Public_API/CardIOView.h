@@ -6,7 +6,9 @@
 #import <UIKit/UIKit.h>
 #import "CardIOViewDelegate.h"
 #import "CardIODetectionMode.h"
+#import "CardIOIdCardScannerDelegate.h"
 
+@class CardIOConfig;
 /// CardIOView is one of two main entry points into the card.io SDK.
 /// @see CardIOPaymentViewController
 @interface CardIOView : UIView
@@ -17,8 +19,9 @@
 /// Typically, your view controller will set itself as this delegate.
 @property(nonatomic, weak, readwrite) id<CardIOViewDelegate> delegate;
 
-
 #pragma mark - Properties you MAY set
+
+@property(nonatomic, strong, readwrite) CardIOConfig *config;
 
 /// The preferred language for all strings appearing in the user interface.
 /// If not set, or if set to nil, defaults to the device's current language setting.

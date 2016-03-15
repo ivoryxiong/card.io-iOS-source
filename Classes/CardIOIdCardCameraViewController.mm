@@ -94,12 +94,13 @@
   CGRect cardIOViewFrame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
   cardIOViewFrame = CGRectRoundedToNearestPixel(cardIOViewFrame);
   self.cardIOView = [[CardIOView alloc] initWithFrame:cardIOViewFrame];
-  
+  self.cardIOView.config = self.context.config;
+
   self.cardIOView.delegate = self;
   self.cardIOView.languageOrLocale = self.context.languageOrLocale;
-  self.cardIOView.useCardIOLogo = self.context.useCardIOLogo;
-  self.cardIOView.hideCardIOLogo = self.context.hideCardIOLogo;
-  self.cardIOView.guideColor = self.context.guideColor;
+  self.cardIOView.useCardIOLogo = NO;
+  self.cardIOView.hideCardIOLogo = YES;
+  self.cardIOView.guideColor = [UIColor orangeColor];
   self.cardIOView.scannedImageDuration = self.context.scannedImageDuration;
   self.cardIOView.allowFreelyRotatingCardGuide = self.context.allowFreelyRotatingCardGuide;
   
@@ -107,8 +108,7 @@
   self.cardIOView.scanExpiry = self.context.collectExpiry && self.context.scanExpiry;
   self.cardIOView.scanOverlayView = self.context.scanOverlayView;
   
-  self.cardIOView.detectionMode = self.context.detectionMode;
-  
+  self.cardIOView.detectionMode = CardIODetectionModeCardImageAndIdCard;
   [self.view addSubview:self.cardIOView];
   
   _cancelButton = [self makeButtonWithTitle:CardIOLocalizedString(@"cancel", self.context.languageOrLocale) // Cancel
@@ -478,6 +478,17 @@
 
 
 #pragma mark - CardIOViewDelegate method
+
+- (void)cardIOView:(CardIOView *)cardIOView didScanIdCard:(NSDictionary *)cardInfo {
+  CardIOIdCardViewController *root = (CardIOIdCardViewController *)self.navigationController;
+  [root setNavigationBarHidden:NO animated:YES]; // to restore the color of the status bar!
+  
+  if (cardInfo ) {
+    [root.idCardDelegate userDidProvideIdCardCardInfo:cardInfo inIdCardViewController:root];
+  } else {
+    [root.idCardDelegate userDidCancelIdCardViewController:root];
+  }
+}
 
 - (void)cardIOView:(CardIOView *)cardIOView didScanCard:(CardIOCreditCardInfo *)cardInfo {
   self.context.detectionMode = cardIOView.detectionMode;  // may have changed from Auto to CardImageOnly

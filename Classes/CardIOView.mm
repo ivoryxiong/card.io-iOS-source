@@ -22,6 +22,7 @@
 #import "CardIOLocalizer.h"
 #import "CardIOMacros.h"
 #import "CardIOOrientation.h"
+#import "CardIOIdCardViewControllerContinuation.h"
 #import "CardIOPaymentViewControllerContinuation.h"
 #import "CardIOReadCardInfo.h"
 #import "CardIOTransitionView.h"
@@ -30,6 +31,7 @@
 #import "CardIOViewDelegate.h"
 #import "NSObject+CardioCategoryTest.h"
 #import "CardIODetectionMode.h"
+#import "CardIOIdCardScannerDelegate.h"
 
 NSString * const CardIOScanningOrientationDidChangeNotification = @"CardIOScanningOrientationDidChangeNotification";
 NSString * const CardIOCurrentScanningOrientation = @"CardIOCurrentScanningOrientation";
@@ -37,7 +39,6 @@ NSString * const CardIOScanningOrientationAnimationDuration = @"CardIOScanningOr
 
 @interface CardIOView () <CardIOVideoStreamDelegate>
 
-@property(nonatomic, strong, readwrite) CardIOConfig *config;
 @property(nonatomic, strong, readwrite) CardIOCameraView *cameraView;
 @property(nonatomic, strong, readwrite) CardIOReadCardInfo *readCardInfo;
 @property(nonatomic, strong, readwrite) UIImage *cardImage;
@@ -45,7 +46,7 @@ NSString * const CardIOScanningOrientationAnimationDuration = @"CardIOScanningOr
 // These two properties were declared readonly in CardIOViewContinuation.h
 @property(nonatomic, strong, readwrite) CardIOCardScanner *scanner;
 @property(nonatomic, strong, readwrite) CardIOTransitionView *transitionView;
-@property(nonatomic, assign, readwrite) id<CardIOIdCardScannerDelegate> idScanner;
+@property(nonatomic, weak, readwrite) id<CardIOIdCardScannerDelegate> idScanner;
 
 @property(nonatomic, assign, readwrite) BOOL scanHasBeenStarted;
 
@@ -81,8 +82,15 @@ NSString * const CardIOScanningOrientationAnimationDuration = @"CardIOScanningOr
     [NSException raise:@"CardIO-IncompleteIntegration" format:@"Please add -ObjC to 'Other Linker Flags' in your project settings. (%@)", exception];
   }
 
-  _config = [[CardIOConfig alloc] init];
-  _config.scannedImageDuration = 1.0;
+}
+
+- (CardIOConfig *)config {
+  if (_config == nil) {
+    _config = [[CardIOConfig alloc] init];
+    _config.scannedImageDuration = 1.0;
+  }
+  
+  return _config;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
@@ -212,6 +220,10 @@ NSString * const CardIOScanningOrientationAnimationDuration = @"CardIOScanningOr
   if(processedFrame.scanner.complete) {
     [self didScanCard:processedFrame];
   }
+  
+  if ([processedFrame.idScanner complete]) {
+    [self didScanIdCard:processedFrame];
+  }
 }
 
 - (void)didDetectCard:(CardIOVideoFrame *)processedFrame {
@@ -248,6 +260,67 @@ NSString * const CardIOScanningOrientationAnimationDuration = @"CardIOScanningOr
   [self.config.scanReport reportEventWithLabel:@"scan_success" withScanner:processedFrame.scanner];
   
   [self successfulScan:cardInfo];
+}
+
+- (void)didScanIdCard:(CardIOVideoFrame *)processedFrame {
+  [self stopSession];
+  [self vibrate];
+  
+  NSDictionary *userInfo = [processedFrame.idScanner cardInfo];
+//  self.readCardInfo = processedFrame.scanner.cardInfo;
+//  CardIOCreditCardInfo *cardInfo = [[CardIOCreditCardInfo alloc] init];
+//  cardInfo.cardNumber = self.readCardInfo.numbers;
+//  cardInfo.expiryMonth = self.readCardInfo.expiryMonth;
+//  cardInfo.expiryYear = self.readCardInfo.expiryYear;
+//  cardInfo.scanned = YES;
+  
+  self.cardImage = [processedFrame imageWithGrayscale:NO];
+  
+//  [self.config.scanReport reportEventWithLabel:@"scan_success" withScanner:processedFrame.scanner];
+  
+  [self successfullScanIdCard:userInfo];
+}
+
+- (void)successfullScanIdCard:(NSDictionary *)cardInfo {
+  // Even if not showing a transitionView (because self.scannedImageDuration == 0), we still create it.
+  // This is because the CardIODataEntryView gets its cardImage from the transitionView. (A bit of a kludge, yes.)
+  UIImage *annotatedImage = [CardIOCardOverlay cardImage:self.cardImage withDisplayInfo:self.readCardInfo annotated:YES];
+  CGRect cameraPreviewFrame = [self cameraPreviewFrame];
+  
+  CGAffineTransform r = CGAffineTransformIdentity;
+  CardIOIdCardViewController *vc = [CardIOIdCardViewController cardIOIdCardViewControllerForResponder:self];
+  if (vc != nil &&
+      [UIDevice currentDevice].orientation != UIDeviceOrientationPortrait &&
+      vc.modalPresentationStyle == UIModalPresentationFullScreen) {
+    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    if (deviceOrientation == UIDeviceOrientationFaceUp || deviceOrientation == UIDeviceOrientationFaceDown) {
+      deviceOrientation = (UIDeviceOrientation) vc.initialInterfaceOrientationForViewcontroller;
+    }
+    InterfaceToDeviceOrientationDelta delta = orientationDelta(UIInterfaceOrientationPortrait, deviceOrientation);
+    CGFloat rotation = -rotationForOrientationDelta(delta); // undo the orientation delta
+    r = CGAffineTransformMakeRotation(rotation);
+  }
+  
+  self.transitionView = [[CardIOTransitionView alloc] initWithFrame:cameraPreviewFrame cardImage:annotatedImage transform:r];
+  
+  if (self.scannedImageDuration > 0.0) {
+    [self addSubview:self.transitionView];
+    
+    [self.transitionView animateWithCompletion:^{
+      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.scannedImageDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+        if (self.delegate) {
+          [self.delegate cardIOView:self didScanIdCard:cardInfo];
+        }
+        [self.transitionView removeFromSuperview];
+      });
+    }];
+  }
+  else {
+    if (self.delegate) {
+      self.transitionView.hidden = YES;
+      [self.delegate cardIOView:self didScanIdCard:cardInfo];
+    }
+  }
 }
 
 - (void)successfulScan:(CardIOCreditCardInfo *)cardInfo {

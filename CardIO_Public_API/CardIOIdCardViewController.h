@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class CardIOIdCardViewController;
+@protocol CardIOIdCardScannerDelegate;
 
 @protocol CardIOIdCardViewControllerDelegate<NSObject>
 
@@ -22,8 +23,12 @@
 @end
 
 @interface CardIOIdCardViewController : UINavigationController
-- (id)initWithIdCardDelegate:(id<CardIOIdCardViewControllerDelegate>)aDelegate;
-- (id)initWithIdCardDelegate:(id<CardIOIdCardViewControllerDelegate>)aDelegate scanningEnabled:(BOOL)scanningEnabled;
+- (instancetype)initWithIdCardDelegate:(id<CardIOIdCardViewControllerDelegate>)aDelegate
+                                     scanner:(id<CardIOIdCardScannerDelegate>)scanner;
+
+- (instancetype)initWithIdCardDelegate:(id<CardIOIdCardViewControllerDelegate>)aDelegate
+                               scanner:(id<CardIOIdCardScannerDelegate>)scanner
+                       scanningEnabled:(BOOL)scanningEnabled;
 
 @property(nonatomic, copy, readwrite) NSString *languageOrLocale;
 
@@ -59,5 +64,7 @@
 
 /// Access to the delegate.
 @property(nonatomic, weak, readwrite) id<CardIOIdCardViewControllerDelegate> idCardDelegate;
+
+@property(nonatomic, weak, readwrite) id<CardIOIdCardScannerDelegate> idScanner;
 
 @end

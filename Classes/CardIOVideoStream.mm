@@ -180,7 +180,6 @@
   if((self = [super init])) {
     _interfaceOrientation = (UIInterfaceOrientation)UIDeviceOrientationUnknown;
     _scanner = [[CardIOCardScanner alloc] init];
-    _idScanner = self.config.idScanner;
     _cameraConfigurationSemaphore = dispatch_semaphore_create(1); // parameter of `1` implies "allow access to only one thread at a time"
 #if USE_CAMERA
     _captureSession = [[AVCaptureSession alloc] init];
@@ -582,9 +581,11 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     CardIOVideoFrame *frame = [[CardIOVideoFrame alloc] initWithSampleBuffer:nil interfaceOrientation:self.interfaceOrientation];
     frame.scanner = self.scanner;
     frame.cardInfo = self.scanner.cardInfo;
+    frame.idScanner = self.idScanner;
 #else
     CardIOVideoFrame *frame = [[CardIOVideoFrame alloc] initWithSampleBuffer:sampleBuffer interfaceOrientation:self.interfaceOrientation];
     frame.scanner = self.scanner;
+    frame.idScanner = self.idScanner;
     frame.dmz = dmz;
     
   #if LOG_FPS
@@ -732,6 +733,9 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
   }
 }
 
+- (id<CardIOIdCardScannerDelegate>)idScanner {
+  return self.config.idScanner;
+}
 #pragma mark - Suspend/Resume when app is backgrounded/foregrounded
 
 - (void)didReceiveBackgroundingNotification:(NSNotification *)notification {

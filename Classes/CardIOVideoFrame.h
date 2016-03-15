@@ -20,6 +20,7 @@ typedef enum {
 @class CardIOIplImage;
 @class CardIOCardScanner;
 @class CardIOReadCardInfo;
+@protocol CardIOIdCardScannerDelegate;
 
 @interface CardIOVideoFrame : NSObject
 
@@ -53,6 +54,9 @@ typedef enum {
 @property(nonatomic, strong, readwrite) CardIOIplImage *cardCb;
 @property(nonatomic, strong, readwrite) CardIOIplImage *cardCr;
 @property(nonatomic, strong, readwrite) CardIOCardScanner *scanner;
+@property(nonatomic, weak, readwrite) id<CardIOIdCardScannerDelegate> idScanner;
+
+@property(nonatomic, strong, readwrite) NSDictionary *idCardInfo; // Will be nil unless frame processing completes with a successful scan
 @property(nonatomic, strong, readwrite) CardIOReadCardInfo *cardInfo; // Will be nil unless frame processing completes with a successful scan
 @property(assign) dmz_context *dmz;
 @property(nonatomic, assign, readwrite) BOOL calculateBrightness;

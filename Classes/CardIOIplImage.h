@@ -5,6 +5,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreVideo/CoreVideo.h>
+#include "opencv2/imgproc/imgproc_c.h"
 
 #define Y_PLANE 0
 #define CBCR_PLANE 1
@@ -30,7 +31,6 @@
 
 - (UIImage *)UIImage;
 
-- (UIImage *)ico_ocr_image_threshold:(int)threshold;
 @property(nonatomic, assign, readonly) IplImage *image;
 @property(nonatomic, assign, readonly) CvSize cvSize;
 @property(nonatomic, assign, readonly) CGSize cgSize;

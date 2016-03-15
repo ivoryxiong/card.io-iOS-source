@@ -8,10 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@class CardIOIplImage;
 @protocol CardIOIdCardScannerDelegate <NSObject>
 - (void)reset;
-- (void)addFrame:(CardIOIplImage *)y;
+- (void)addFrame:(UIImage *)y;
 - (BOOL)complete;
 
 // these properties are intentionally (superstitiously, anyhow) atomic -- card scanners get passed around between threads

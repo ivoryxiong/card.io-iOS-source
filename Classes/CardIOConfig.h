@@ -22,6 +22,6 @@
 @property(nonatomic, retain, readwrite) UIView *scanOverlayView;
 
 @property(nonatomic, assign, readwrite) CardIODetectionMode detectionMode;
-@property(nonatomic, assign, readwrite) id<CardIOIdCardScannerDelegate> idScanner;
+@property(nonatomic, weak, readwrite) id<CardIOIdCardScannerDelegate> idScanner;
 
 @end

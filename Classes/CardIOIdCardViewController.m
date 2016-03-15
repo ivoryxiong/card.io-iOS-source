@@ -21,7 +21,7 @@
 #import "CardIOStyles.h"
 #import "CardIOView.h"
 #import "CardIOUtilities.h"
-
+#import "CardIOConfig.h"
 #import "warp.h"
 
 #import "CardIODetectionMode.h"
@@ -50,11 +50,14 @@
   return (CardIOIdCardViewController *)responder;
 }
 
-- (id)initWithIdCardDelegate:(id<CardIOIdCardViewControllerDelegate>)aDelegate {
-  return [self initWithIdCardDelegate:aDelegate scanningEnabled:YES];
+- (instancetype)initWithIdCardDelegate:(id<CardIOIdCardViewControllerDelegate>)aDelegate
+                     scanner:(id<CardIOIdCardScannerDelegate>)scanner {
+  return [self initWithIdCardDelegate:aDelegate scanner:scanner scanningEnabled:YES];
 }
 
-- (id)initWithIdCardDelegate:(id<CardIOIdCardViewControllerDelegate>)aDelegate scanningEnabled:(BOOL)scanningEnabled {
+- (instancetype)initWithIdCardDelegate:(id<CardIOIdCardViewControllerDelegate>)aDelegate
+                     scanner:(id<CardIOIdCardScannerDelegate>)scanner
+             scanningEnabled:(BOOL)scanningEnabled {
 #if CARDIO_DEBUG
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
@@ -78,21 +81,24 @@
     return nil;
   }
   
+
+  if(!scanner) {
+    NSLog(@"Failed to initialize CardIOIdCardViewController -- no scanner provided");
+    return nil;
+  }
+  self.idScanner = scanner;
+  
+
   CardIOContext *context = [[CardIOContext alloc] init];
+  _context = context;
+  _context.config.idScanner = self.idScanner;
+  _context.scannedImageDuration = (CGFloat) 0.1f;
+  
   UIViewController *viewController = [[self class] viewControllerWithScanningEnabled:scanningEnabled withContext:context];
   
   if((self = [super initWithRootViewController:viewController])) {
-    _context = context;
-    _context.scannedImageDuration = (CGFloat) 0.1f;
     _currentViewControllerIsDataEntry = [viewController isKindOfClass:[CardIODataEntryViewController class]];
     _initialInterfaceOrientationForViewcontroller = [UIApplication sharedApplication].statusBarOrientation;
-#if USE_CAMERA || SIMULATE_CAMERA
-    if(!self.currentViewControllerIsDataEntry) {
-      CardIOIdCardCameraViewController *cameraVC = (CardIOIdCardCameraViewController *)viewController;
-      cameraVC.context = self.context;
-    }
-#endif
-    
     _idCardDelegate = aDelegate;
     _shouldStoreStatusBarStyle = YES;
   }
@@ -307,6 +313,7 @@
 #if USE_CAMERA || SIMULATE_CAMERA
   if([CardIOUtilities canReadCardWithCamera] && scanningEnabled) {
     returnVC = [[CardIOIdCardCameraViewController alloc] init];
+    ((CardIOIdCardCameraViewController*)returnVC).context = aContext;
   }
 #endif
   if(!returnVC) {

@@ -15,7 +15,7 @@
 #import "scan_analytics.h"
 
 #import "CardIODetectionMode.h"
-
+#import "CardIOIdCardScannerDelegate.h"
 #if CARDIO_DEBUG
 #import "CardIOCardOverlay.h"
 #include "sobel.h"
@@ -139,6 +139,9 @@
 
     BOOL scanCard = isValidIplImage && (self.detectionMode != CardIODetectionModeCardImageOnly);
     if(scanCard) {
+      if (self.detectionMode == CardIODetectionModeCardImageAndIdCard) {
+        [self.idScanner addFrame:[self.cardY UIImage]];
+      } else {
       [self.scanner addFrame:self.cardY
                   focusScore:self.focusScore
              brightnessScore:self.brightnessScore
@@ -147,6 +150,7 @@
                    torchIsOn:self.torchIsOn
                  markFlipped:self.flipped
                   scanExpiry:self.scanExpiry];
+      }
       
 #if CARDIO_DEBUG
       if (self.scanner.cardInfo != nil) {
@@ -174,9 +178,9 @@
       }
 #endif
       
-      if(self.scanner.complete) {
+      if(self.scanner.complete || [self.idScanner complete]) {
         self.cardInfo = self.scanner.cardInfo;
-        
+        self.idCardInfo = [self.idScanner cardInfo];
         // if the scanning is complete, we need the transformed cb/cr channels for display
         [self transformCbCrWithFrameOrientation:frameOrientation];
       } else if (!self.flipped && self.scanner.lastFrameWasUpsideDown) {

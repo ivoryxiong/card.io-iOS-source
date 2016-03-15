@@ -12,13 +12,16 @@
 #if CARDIO_DEBUG
 #import "CardIOLocalizer.h"
 #import "CardIOPaymentViewControllerContinuation.h"
+#import "CardIOIdCardViewControllerContinuation.h"
 #endif
 
 #define TEST_HIDEABLE_CARDIOVIEW 1
 
+#import "iccIdCardScanner.h"
+
 #pragma mark -
 
-@interface RootViewController ()
+@interface RootViewController () <CardIOIdCardViewControllerDelegate>
 
 @property(nonatomic, strong, readwrite) IBOutlet UIButton *scanButton;
 @property(nonatomic, strong, readwrite) IBOutlet UIButton *scanPicoPikaButton;
@@ -56,6 +59,9 @@
 @property(nonatomic, strong, readwrite) UIAlertView *i18nAlertView;
 @property(nonatomic, strong, readwrite) UIView      *i18nAlertViewBackground;
 
+@property(nonatomic, strong, readwrite) CardIOIdCardViewController *i18nCardIOIdCardViewController;
+
+@property(nonatomic, strong, readwrite) iccIdCardScanner *idScanner;
 @end
 
 
@@ -77,32 +83,58 @@
 }
 
 - (IBAction)scan {
-  CardIOPaymentViewController *paymentVC = [[CardIOPaymentViewController alloc] initWithPaymentDelegate:self scanningEnabled:!self.manualSwitch.on];
-  paymentVC.collectExpiry = self.expirySwitch.on;
-  paymentVC.collectCVV = self.cvvSwitch.on;
-  paymentVC.collectPostalCode = self.zipSwitch.on;
-  paymentVC.restrictPostalCodeToNumericOnly = self.zipOnlyNumericSwitch.on;
-  paymentVC.collectCardholderName = self.nameSwitch.on;
+  if (self.idScanner == nil) {
+    self.idScanner = [[iccIdCardScanner alloc] init];
+  }
+
+  CardIOIdCardViewController *paymentVC = [[CardIOIdCardViewController alloc] initWithIdCardDelegate:self
+                                                                                             scanner:self.idScanner
+                                                                                     scanningEnabled:!self.manualSwitch.on];
   paymentVC.disableManualEntryButtons = self.disableManualEntrySwitch.on;
-  paymentVC.useCardIOLogo = self.useCardIOLogoSwitch.on;
-  paymentVC.allowFreelyRotatingCardGuide = NO;
   paymentVC.scannedImageDuration = [self.scannedImageDurationField.text floatValue];
 #if CARDIO_DEBUG
   paymentVC.doABTesting = self.doABTestingSwitch.on;
 #endif
-
+  
   paymentVC.languageOrLocale = self.language;
-
+  
   paymentVC.suppressScanConfirmation = self.confirmSwitch ? !self.confirmSwitch.on : NO;
   paymentVC.suppressScannedCardImage = self.hideCardImageSwitch ? self.hideCardImageSwitch.on : NO;
   paymentVC.maskManualEntryDigits = self.doABTestingSwitch.on;
-
   if (self.modalPresentationStyleSegment) {
     paymentVC.modalPresentationStyle = (UIModalPresentationStyle)self.modalPresentationStyleSegment.selectedSegmentIndex;
   }
   
   [self presentViewController:paymentVC animated:YES completion:nil];
 }
+
+//- (IBAction)scan {
+//  CardIOPaymentViewController *paymentVC = [[CardIOPaymentViewController alloc] initWithPaymentDelegate:self scanningEnabled:!self.manualSwitch.on];
+//  paymentVC.collectExpiry = self.expirySwitch.on;
+//  paymentVC.collectCVV = self.cvvSwitch.on;
+//  paymentVC.collectPostalCode = self.zipSwitch.on;
+//  paymentVC.restrictPostalCodeToNumericOnly = self.zipOnlyNumericSwitch.on;
+//  paymentVC.collectCardholderName = self.nameSwitch.on;
+//  paymentVC.disableManualEntryButtons = self.disableManualEntrySwitch.on;
+//  paymentVC.useCardIOLogo = self.useCardIOLogoSwitch.on;
+//  paymentVC.allowFreelyRotatingCardGuide = NO;
+//  paymentVC.scannedImageDuration = [self.scannedImageDurationField.text floatValue];
+//#if CARDIO_DEBUG
+//  paymentVC.doABTesting = self.doABTestingSwitch.on;
+//#endif
+//
+//  paymentVC.languageOrLocale = self.language;
+//
+//  paymentVC.suppressScanConfirmation = self.confirmSwitch ? !self.confirmSwitch.on : NO;
+//  paymentVC.suppressScannedCardImage = self.hideCardImageSwitch ? self.hideCardImageSwitch.on : NO;
+//  paymentVC.maskManualEntryDigits = self.doABTestingSwitch.on;
+//
+//  if (self.modalPresentationStyleSegment) {
+//    paymentVC.modalPresentationStyle = (UIModalPresentationStyle)self.modalPresentationStyleSegment.selectedSegmentIndex;
+//  }
+//  
+//  [self presentViewController:paymentVC animated:YES completion:nil];
+//}
 
 - (IBAction)scanPicoPika {
 #if TEST_HIDEABLE_CARDIOVIEW
@@ -168,6 +200,21 @@
   [self presentViewController:nc animated:YES completion:nil];
 }
 
+- (void)userDidCancelIdCardViewController:(CardIOIdCardViewController *)paymentViewController {
+  NSLog(@"XXXXXXXXXXX %@", NSStringFromSelector(_cmd));
+  [paymentViewController dismissViewControllerAnimated:YES completion:nil];
+  self.idScanner = nil;
+}
+
+- (void)userDidProvideIdCardCardInfo:(NSDictionary *)cardInfo
+              inIdCardViewController:(CardIOIdCardViewController *)idCardViewController {
+  self.idScanner = nil;
+  [idCardViewController dismissViewControllerAnimated:YES completion:nil];
+  NSLog(@"RRRRRRRRRR CardInfo : %@", cardInfo);
+
+  NSLog(@"RRRRRRRRRR %@", NSStringFromSelector(_cmd));
+
+}
 #pragma mark - I18n testing
 
 #if CARDIO_DEBUG

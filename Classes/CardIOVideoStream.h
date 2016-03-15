@@ -51,7 +51,7 @@
 @property(nonatomic, strong, readonly) AVCaptureVideoPreviewLayer *previewLayer;
 #endif
 @property(nonatomic, strong, readwrite) CardIOCardScanner *scanner;
-@property(nonatomic, assign) id<CardIOIdCardScannerDelegate> idScanner;
+@property(nonatomic, weak, readwrite) id<CardIOIdCardScannerDelegate> idScanner;
 @end
 
 #endif //USE_CAMERA || SIMULATE_CAMERA
