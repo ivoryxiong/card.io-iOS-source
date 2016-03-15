@@ -15,7 +15,8 @@
 #import "CardIOOrientation.h"
 #import "CardIOPaymentViewControllerContinuation.h"
 
-#define kCaptureSessionDefaultPresetResolution AVCaptureSessionPreset640x480
+//#define kCaptureSessionDefaultPresetResolution AVCaptureSessionPreset640x480
+#define kCaptureSessionDefaultPresetResolution AVCaptureSessionPreset1280x720
 #define kVideoQueueName "io.card.ios.videostream"
 
 #define kMinTimeIntervalForAutoFocusOnce 2
